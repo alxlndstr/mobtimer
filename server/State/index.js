@@ -12,6 +12,7 @@ const newSession = () => {
   state.users = [];
   state.roundLength = (1000 * 10)// * 60);
   state.currentTime = 0;
+  state.currentUser = {};
   state.status = 'stopped';
   state.clock = null;
 
@@ -28,36 +29,30 @@ const newSession = () => {
     return clientState;
   }
 
-  state.newUserTurn = () => {
-    if(!state.users) {
-      return 'nousers';
+  state.nextUserIndex = () => {
+    if(!state.users.length) {
+      return -1;
     }
-
-    let nextUser;
-    const currentUserIndex = state.users.indexOf(state.CurrentUser);
-    if(currentUserIndex === -1 || currentUserIndex === state.users.length-1) {
-      nextUser = state.users[0];
+    if (!state.currentUser) {
+      return 0;
     }
-    else {
-      nextUser = state.users[currentUserIndex + 1];
+    const currentUserIndex = state.users.indexOf(state.currentUser);
+    if(currentUserIndex >= state.users.length-1) {
+      return 0;
     }
-
-    return nextUser;
+    return currentUserIndex + 1;
   }
 
   state.startRound = socket => {
     clearInterval(state.clock);
 
-    const currentUser = state.newUserTurn();
-    if (currentUser === 'nousers')
-    {
-      return;
-    }
-    state.currentUser = currentUser;
+    const currentUserIndex = state.nextUserIndex();
+    if (currentUserIndex === -1) return;
+    state.currentUser = state.users[currentUserIndex];
     state.currentTime = state.roundLength;
 
     state.status = 'running';
-    console.log(`starting timer for group ${state.id} @ ${state.currentTime}. ${state.currentUser} has the turn`);
+    console.log(`starting timer for group ${state.id} @ ${state.currentTime}. ${state.currentUser?.name} has the turn`);
 
     socket.emit('data', { type: 'time_start', currentUser: state.currentUser, currentTime: state.currentTime });
 
