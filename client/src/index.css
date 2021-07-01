@@ -1,13 +1,105 @@
+:root {
+  --onyx: #32373bff;
+  --feldgrau: #4a5859ff;
+  --feldgrau2: rgb(103, 117, 117);
+  --unbleached-silk: #f4d6ccff;
+  --sunray: #f4b860ff;
+  --brick-red: #c83e4dff;
+  --my-green: rgb(62, 110, 110);
+}
+* {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  color: var(--unbleached-silk);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: radial-gradient(var(--feldgrau), var(--onyx));
+  background-size: cover;
+  height: 100vh;
+  overflow-x: hidden;
+  width: 100vw;
+}
+button {
+  background-color: var(--feldgrau);
+  color: var(--unbleached-silk);
+  border-radius: 4px;
+}
+input {
+  background-color: var(--unbleached-silk);
+  margin: 4px;
+  border-radius: 4px;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+}
+.app__header {
+  display: flex;
+  height: 120px;
+  background: linear-gradient(80deg,#32373bff,#32373b00);
+  align-items: center;
+  border-bottom: 5px solid #21262aff;
+  margin-bottom: 12px;
+  padding-left: 32px;
+  align-content: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.app__main {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  align-content: center;
 }
+.app__settings {
+  align-self: center;
+  margin-bottom: 12px;
+}
+.app__controls {
+  align-self: center;
+}
+.hidden {
+  display: none;
+}
+.app__userList {
+  align-self: center;
+  min-width: 300px;
+  padding: 12px;
+  list-style: none;
+  border-radius: 5px;
+  background-color: var(--feldgrau2);
+}
+.userList__entry {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  align-items: center;
+  justify-content: space-between;
+}
+.userList__left {
+  display: flex;
+  align-items: center;
+}
+.userList__right {
+  display: flex;
+  align-items: center;
+}
+.userList__time {
+  font-size: 22px;
+  margin-right: 6px;
+}
+.userList__name {
+  color: ivory;
+}
+.userList__removeUser {
+  width: 32px;
+  height: 32px;
+  float:right;
+}
+.userList__name--currentUser {
+  border: 3px solid var(--my-green);
+  border-radius: 12px;
+  padding: 4px;
+} 

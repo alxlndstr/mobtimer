@@ -3,6 +3,7 @@ const newUser = name => {
   const user = {};
   user.id = uuid.v4();
   user.name = name;
+  user.skip = false;
   return user;
 }
 
@@ -10,12 +11,24 @@ const newSession = () => {
   const state = {};
   state.id = uuid.v4();
   state.users = [];
-  state.roundLength = (1000 * 10)// * 60);
+  state.roundLength = (1000 * 3)// * 60);
+  state.continuous = false;
   state.currentTime = 0;
-  state.currentUser = {};
+  state.currentUser = 0;
   state.status = 'stopped';
   state.clock = null;
-
+  state.resetClock = () => {
+    clearInterval(state.clock);
+    state.status = 'stopped';
+    state.currentTime = state.roundLength;
+  };
+  state.endTurn = () => {
+    if (state.status === 'running') {
+      state.resetClock();
+    }
+    nextIndex = state.nextUserIndex();
+    state.currentUser = nextIndex > -1 ? state.users[nextIndex] : {};
+  };
   state.clientState = () => {
     const {
       id,
@@ -23,48 +36,67 @@ const newSession = () => {
       roundLength,
       currentTime,
       currentUser,
-      status
+      status,
     } = state;
-    const clientState = { id, users, roundLength, currentTime, currentUser, status };
+    const clientState = {
+      id,
+      users,
+      roundLength,
+      currentTime,
+      currentUser,
+      status
+    };
     return clientState;
   }
-
-  state.nextUserIndex = () => {
-    if(!state.users.length) {
+  state.removeUser = (userId) => {
+    const index = state.users.indexOf(state.users.find(({id}) => id === userId));
+    if(state.currentUser?.id === userId) state.endTurn()
+    state.users.splice(index, 1);
+  }
+  state.setRoundLength = (minutes, seconds = 0) => {
+    state.roundLength = state.currentTime = (minutes * 60000) + (seconds * 1000);
+  }
+  state.nextUserIndex = (currentUser = state.currentUser) => {
+    if (!state.users.length) {
       return -1;
     }
-    if (!state.currentUser) {
-      return 0;
+    if (state.users.every(({skip}) => skip)) {
+      return -1;
     }
-    const currentUserIndex = state.users.indexOf(state.currentUser);
-    if(currentUserIndex >= state.users.length-1) {
-      return 0;
+    const currentUserIndex = state.users.indexOf(currentUser);
+    if(currentUserIndex >= state.users.length - 1) {
+      return !state.users[0].skip ? 0 : state.nextUserIndex(state.users[0]);
+    }
+    if(state.users[currentUserIndex + 1].skip) {
+      return state.nextUserIndex(state.users[currentUserIndex + 1])
     }
     return currentUserIndex + 1;
   }
 
-  state.startRound = socket => {
+  state.startRound = (socket) => {
     clearInterval(state.clock);
+    if(!state.currentUser) {
+      const currentUserIndex = state.nextUserIndex();
+      if (currentUserIndex === -1) {
+        return;
+      };
 
-    const currentUserIndex = state.nextUserIndex();
-    if (currentUserIndex === -1) return;
-    state.currentUser = state.users[currentUserIndex];
-    state.currentTime = state.roundLength;
-
+      state.currentUser = state.users[currentUserIndex];
+      state.currentTime = state.roundLength;
+    }
     state.status = 'running';
     console.log(`starting timer for group ${state.id} @ ${state.currentTime}. ${state.currentUser?.name} has the turn`);
 
     socket.emit('data', { type: 'time_start', currentUser: state.currentUser, currentTime: state.currentTime });
 
     state.clock = setInterval(() => {
-      if (state.status = 'running') {
+      if (state.status === 'running') {
         state.currentTime -= 1000;
         socket.emit('data', { type: 'time', currentTime: state.currentTime });
       }
       if (state.currentTime < 1000) {
-        clearInterval(state.clock);
-        state.status = 'stopped';
-        state.currentTime = state.roundLength;
+        state.endTurn();
+        socket.emit('data', { type: 'time_end', currentUser: state.currentUser, currentTime: state.currentTime });
       }
     }, 1000);
   };

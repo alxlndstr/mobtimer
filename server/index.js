@@ -28,7 +28,6 @@ io.on('connection', socket => {
   })
 
   socket.on('data', data => {
-    console.log(data);
     requestHandler.handle(data);
   });
 

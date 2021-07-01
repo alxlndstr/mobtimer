@@ -1,11 +1,13 @@
 const NewUserForm = ({addNewUser}) => {
   const onSubmit = e => {
-    const name = document.querySelector('#newUserForm__name').value;
-    if(name) addNewUser(name);
+    const nameInput = document.querySelector('#newUserName');
+    if (nameInput.value) addNewUser(nameInput.value);
+    nameInput.value = '';
   }
   return (
     <div className="newUserForm">
-      <input type="text" id="newUserForm__name" />
+      <label htmlFor="newUserName">Add a user:</label> <br />
+      <input type="text" placeholder="Username" name="newUserName" maxLength="24" onKeyPress={(e) => {if (e.key === 'Enter') onSubmit(e)}} id="newUserName" />
       <button onClick={onSubmit}> Add </button>
     </div>
   );

@@ -3,7 +3,9 @@ import socketIOClient from 'socket.io-client';
 import './App.css';
 import { ResponseHandler } from './responseHandler';
 import NewUserForm from './Components/NewUserForm';
+import Settings from './Components/Settings';
 import msToTimeString from './utils';
+import User from './Components/User';
 
 const searchparams = new URLSearchParams(window.location.search);
 let resHandler;
@@ -31,23 +33,25 @@ function App() {
 
   return (
     <div className="app">
-
-      <button onClick={() => sendData({ type: 'time', action: 'start' })}>Start timer</button>
-      <button onClick={() => console.log(state)}>dump state</button>
-      <NewUserForm addNewUser={name => sendData({type: 'new_user', name})} />
-      <div className="app__userList">
-        {
-          state.users
-          ? state.users?.map((user, key) => {
-            if (user.id !== state.currentUser?.id){
-              return <h3 key={key} className="userList__item">{user.name}</h3>;
-            }
-            return <h2 key={key}>{user.name} {msToTimeString(state.currentTime)} </h2>;
-          })
-          : <p className="userList__nousers">Add users to begin!</p>
-        }
+      <header className="app__header">
+        <h1>MobTimer</h1>
+      </header>
+      <div className="app__main">
+        <div className="app__settings">
+          <Settings roundLength={(state.roundLength/60).toString()} sendData={sendData} />
+          <NewUserForm addNewUser={name => sendData({type: 'new_user', name})} />
+        </div>
+        <div className="app__controls">
+          <button onClick={() => sendData({ type: 'time', action: 'start' })}>Start timer</button>
+          <button onClick={() => console.dir(state)}>dump state</button>
+        </div>
+        <ul className="app__userList">
+          {
+            state.users?.length ? state.users.map((user, key) => <User key={key} sendData={sendData} user={user} currentUser={state.currentUser} time={msToTimeString(state.currentTime)} />)
+            : <p className="userList__nousers">Add users to begin!</p>
+          }
+        </ul>
       </div>
-
     </div>
   );
 }
