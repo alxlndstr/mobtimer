@@ -13,16 +13,17 @@ io.on('connection', socket => {
   socket.on('handshake', handshake => {
     console.log(`recieved new handshake: ${JSON.stringify(handshake)}`)
     const existingSession = state.find(({id}) => handshake.sessionId === id)
+
     if (handshake.sessionId !== 'new' && existingSession) {
       socket.join(handshake.sessionId);
-      console.log(`client joined group: ${existingSession.id}`)
-      socket.emit('data', {type: 'full_state', session: state.find(({id}) => handshake.sessionId === id)});
+      console.log(`client joined existing group: ${existingSession.id}`)
+      socket.emit('data', {type: 'full_state', session: JSON.stringify(existingSession.clientState())});
       return;
     }
     const session = newSession();
     state.push(session);
-    socket.emit('data', {type: 'full_state', session});
-    console.log(`client joined group: ${session.id}`)
+    socket.emit('data', {type: 'full_state', session: JSON.stringify(session.clientState())});
+    console.log(`client joined new group: ${session.id}`)
     socket.join(session.id);
   })
 
