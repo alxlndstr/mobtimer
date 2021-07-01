@@ -57,7 +57,7 @@ const newSession = () => {
     state.currentTime = state.roundLength;
 
     state.status = 'running';
-    console.log(`starting timer @ ${state.currentTime}`);
+    console.log(`starting timer for group ${state.id} @ ${state.currentTime}. ${state.currentUser} has the turn`);
 
     socket.emit('data', { type: 'time_start', currentUser: state.currentUser, currentTime: state.currentTime });
 
@@ -76,7 +76,6 @@ const newSession = () => {
 
   state.newUser = name => {
     state.users.push(newUser(name));
-    console.log(state.users);
   };
   return state;
 };
