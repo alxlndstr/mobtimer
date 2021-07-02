@@ -11,12 +11,12 @@ const searchparams = new URLSearchParams(window.location.search);
 let resHandler;
 const socket = socketIOClient(`http://${window.location.hostname}:8080`);
 let showSettingsDialog = true;
+
 const showHideSettings = e => {
   showSettingsDialog = !showSettingsDialog;
   e.target.textContent = showSettingsDialog ? 'Hide settings' : 'Show Settings';
   document.querySelector('.app__settings').classList.toggle('hidden');
 }
-
 
 socket.emit('handshake', { sessionId: searchparams.get('sessionId') || 'new'});
 
@@ -51,7 +51,17 @@ function App() {
         </div>
         <div className="app__controls">
           <button onClick={() => sendData({ type: 'time', action: 'start' })}>Start timer</button>
-          <button onClick={() => console.dir(state)}>dump state</button>
+          <button enabled={(state.status !== 'stopped').toString()} onClick={e => {
+            console.log(state.status);
+            if (state.status === 'running') {
+
+              sendData({ type: 'time', action: 'pause' })
+              e.target.textContent = 'Resume';
+            }
+            if (state.status === 'paused') {
+              sendData({ type: 'time', action: 'resume' })
+              e.target.textContent = 'Pause';
+            }}}>Pause</button>
         </div>
         <ul className="app__userList">
           {

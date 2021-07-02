@@ -1,6 +1,3 @@
-const database = require("mime-db");
-
-
 const handleRequest = (state, io, req) => {
   const session = state.find(({id}) => id === req.sessionId);
   if (!session) return;
@@ -12,9 +9,25 @@ const handleRequest = (state, io, req) => {
       switch (req.action) {
         case 'start': {
           session.startRound(socket);
+          break;
+        }
+        case 'pause': {
+          if (session.status !== 'running') return;
+          session.status = 'paused';
+          console.log(session.status);
+          socket.emit('data', { type: 'time_pause', status: session.status, currentTime: session.currentTime });
+          break;
+        }
+        case 'resume': {
+          if (session.status !== 'paused') return;
+          session.status = 'running';
+          console.log(session.status);
+          socket.emit('data', { type: 'time_resume', status: session.status, currentTime: session.currentTime });
+          break;
         }
         default: return;
       }
+      break;
     }
     case 'new_user': {
       session.newUser(req.name);
@@ -27,7 +40,7 @@ const handleRequest = (state, io, req) => {
       break;
     }
     case 'set_round_length': {
-      if (req.roundLength < 1 || req.roundLength) return;
+      if (req.roundLength < 0.05 || req.roundLength > 720) return;
       session.setRoundLength(req.roundLength);
       console.log('new length:' + req.roundLength);
       socket.emit('data', { type: 'set_round_length', roundLength: session.roundLength });
@@ -36,8 +49,10 @@ const handleRequest = (state, io, req) => {
     case 'toggle_skip_user': {
       const user = session.users.find(({id}) => id === req.userId)
       user.skip = !user.skip;
-      if (session.currentUser === user) session.endTurn();
-      socket.emit('data', { type: 'toggle_skip_user', users: session.users })
+      if (session.currentUser === user) {
+        session.endTurn();
+      }
+      socket.emit('data', { type: 'toggle_skip_user', users: session.users, currentUser: session.currentUser })
       break;
     }
 

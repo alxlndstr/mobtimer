@@ -54,8 +54,9 @@ input {
   letter-spacing: 8px;
 }
 .app__header h1 {
-  background: radial-gradient(#443, #0000);
-
+  background: linear-gradient(75deg, rgb(150, 178, 150), #f4d6ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .app__main {
   display: flex;
@@ -66,6 +67,9 @@ input {
 .app__settings {
   align-self: center;
   margin-bottom: 12px;
+  height: 170px;
+  transition: height 0.2s ease;
+  overflow:hidden;
 }
 .settings__showhide {
   align-self: center;
@@ -76,7 +80,7 @@ input {
   align-self: center;
 }
 .hidden {
-  display: none;
+  height: 0;
 }
 .app__userList {
   align-self: center;
@@ -117,4 +121,7 @@ input {
   border: 3px solid var(--my-green);
   border-radius: 12px;
   padding: 4px;
-} 
+}
+.userList__nousers {
+  justify-self: center;
+}
