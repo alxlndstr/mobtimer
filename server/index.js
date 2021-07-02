@@ -1,9 +1,17 @@
+const express = require('express');
 const PORT = process.env.PORT || 8080;
-const io = require('socket.io')(PORT, { cors: { origin: '*', methods: ['*']}});
+const socketio = require('socket.io')
 const { newSession } = require('./state');
 const RequestHandler = require('./requestHandler');
-let counter = 0;
-let ticktock = true;
+
+const INDEX = '/build/index.html';
+
+const server = express()
+  .use(express.static('build'))
+  .get('/', (_, res) => res.redirect('/index.html'))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+const io = socketio(server);
 
 const state = [];
 const requestHandler = RequestHandler(state, io);

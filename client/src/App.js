@@ -9,7 +9,7 @@ import User from './Components/User';
 
 const searchparams = new URLSearchParams(window.location.search);
 let resHandler;
-const socket = socketIOClient(`http://${window.location.hostname}:8080`);
+const socket = socketIOClient();
 let showSettingsDialog = true;
 
 const showHideSettings = e => {
