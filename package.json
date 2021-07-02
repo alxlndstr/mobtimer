@@ -1,16 +1,12 @@
 {
-  "name": "hackday-mobtimer",
-  "version": "0.1.0",
-  "description": "Multiuser mob timer",
-  "main": "server/index.js",
+  "name": "mobtimer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "mobprogramming"
-  ],
-  "author": "Alexander Lindström",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
