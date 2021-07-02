@@ -10,6 +10,13 @@ import User from './Components/User';
 const searchparams = new URLSearchParams(window.location.search);
 let resHandler;
 const socket = socketIOClient(`http://${window.location.hostname}:8080`);
+let showSettingsDialog = true;
+const showHideSettings = e => {
+  showSettingsDialog = !showSettingsDialog;
+  e.target.textContent = showSettingsDialog ? 'Hide settings' : 'Show Settings';
+  document.querySelector('.app__settings').classList.toggle('hidden');
+}
+
 
 socket.emit('handshake', { sessionId: searchparams.get('sessionId') || 'new'});
 
@@ -37,6 +44,7 @@ function App() {
         <h1>MobTimer</h1>
       </header>
       <div className="app__main">
+        <button className="settings__showhide" onClick={showHideSettings}>Hide Settings</button>
         <div className="app__settings">
           <Settings roundLength={(state.roundLength/60).toString()} sendData={sendData} />
           <NewUserForm addNewUser={name => sendData({type: 'new_user', name})} />
@@ -51,6 +59,7 @@ function App() {
             : <p className="userList__nousers">Add users to begin!</p>
           }
         </ul>
+
       </div>
     </div>
   );
