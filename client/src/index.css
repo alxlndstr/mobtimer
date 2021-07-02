@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Tokyo+Zoo&display=swap');
 :root {
   --onyx: #32373bff;
   --feldgrau: #4a5859ff;
@@ -10,6 +11,9 @@
 * {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 body {
   margin: 0;
@@ -44,19 +48,26 @@ input {
 }
 .app__header {
   display: flex;
-  height: 120px;
+  flex-direction: column;
+  height: 130px;
   background: linear-gradient(80deg,#32373bff,#32373b00);
-  align-items: center;
   border-bottom: 2px solid #21262aff;
   margin-bottom: 12px;
   padding-left: 32px;
+  padding-top: 6px;
   align-content: center;
   letter-spacing: 8px;
 }
 .app__header h1 {
-  background: linear-gradient(75deg, rgb(150, 178, 150), #f4d6ccff);
+  font-family: 'Zen Tokyo Zoo', cursive;
+  margin: 0;
+  font-size: 38px;
+  background: linear-gradient(75deg, rgb(250, 178, 150), #f4d6ccff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.app__header .header__mob {
+  font-size: 56px;
 }
 .app__main {
   display: flex;
@@ -67,20 +78,31 @@ input {
 .app__settings {
   align-self: center;
   margin-bottom: 12px;
-  height: 170px;
+  height: 176px;
   transition: height 0.2s ease;
-  overflow:hidden;
+  border-bottom: 1px solid var(--onyx);
+  overflow: hidden;
+}
+.app__settings__inner input {
+  margin-top: 12px;
+}
+.app__settings__newUserForm input {
+  margin-bottom: 12px;
 }
 .settings__showhide {
   align-self: center;
-  width: 200px;
+  width: 160px;
   margin-bottom: 12px;
 }
 .app__controls {
   align-self: center;
+  display:flex;
+  width: 300px;
+  justify-content:space-between;
 }
 .hidden {
   height: 0;
+  border: none;
 }
 .app__userList {
   align-self: center;

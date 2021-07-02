@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+
 const newUser = name => {
   const user = {};
   user.id = uuid.v4();
@@ -6,7 +7,7 @@ const newUser = name => {
   user.skip = false;
   return user;
 }
-
+// TODO: Store methods outside of state object!
 const newSession = () => {
   const state = {};
   state.id = uuid.v4();

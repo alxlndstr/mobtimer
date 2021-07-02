@@ -33,7 +33,6 @@ function App() {
 
   useEffect(() => {
     socket.on('data', data => {
-      console.log(data);
       resHandler.handle(data);
     });
   }, []);
@@ -41,7 +40,7 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1>MobTimer</h1>
+        <h1 className="header__mob">MOB</h1><h1>TIMER</h1>
       </header>
       <div className="app__main">
         <button className="settings__showhide" onClick={showHideSettings}>Hide Settings</button>
@@ -52,7 +51,6 @@ function App() {
         <div className="app__controls">
           <button onClick={() => sendData({ type: 'time', action: 'start' })}>Start timer</button>
           <button enabled={(state.status !== 'stopped').toString()} onClick={e => {
-            console.log(state.status);
             if (state.status === 'running') {
 
               sendData({ type: 'time', action: 'pause' })

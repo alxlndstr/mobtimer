@@ -1,6 +1,8 @@
 const path = `${window.location.protocol}//${window.location.host}`;
 const audio = new Audio(`${path}/ping.m4a`);
 
+// TODO: MOST OF THESE ACTIONS SHOULD NOW BE COMBINED INTO ONE CALL! case 'update_state': setState({ ...state, ...data.params });
+
 const handleResponse = ({state, setState}, socket, data) => {
   switch (data.type) {
     case 'full_state': {
@@ -44,7 +46,7 @@ const handleResponse = ({state, setState}, socket, data) => {
       break;
     }
     case 'toggle_skip_user': {
-      setState({...state, users: data.users, currentUser: data.currentUser});
+      setState({...state, users: data.users, currentTime: data.currentTime, currentUser: data.currentUser});
       break;
     }
     default: return;
