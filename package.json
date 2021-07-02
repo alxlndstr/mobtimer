@@ -11,5 +11,13 @@
     "mobprogramming"
   ],
   "author": "Alexander Lindström",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
 }
