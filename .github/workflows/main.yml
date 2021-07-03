@@ -1,0 +1,25 @@
+name: buildscript
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      - name: build react
+      - run: cd client
+      - run: npm ci
+      - run: echo "client deps installed"
+      - run: npm run build
+      - run: echo "react app built, attempting to move"
+      - run: git mv build ../build
+      - run: echo "Process Complete"
