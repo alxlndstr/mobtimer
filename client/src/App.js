@@ -9,7 +9,14 @@ import User from './Components/User';
 
 const searchparams = new URLSearchParams(window.location.search);
 let resHandler;
-const socket = socketIOClient(`http://${window.location.hostname}:8080`);
+const socket = socketIOClient();
+let showSettingsDialog = true;
+
+const showHideSettings = e => {
+  showSettingsDialog = !showSettingsDialog;
+  e.target.textContent = showSettingsDialog ? 'Hide settings' : 'Show Settings';
+  document.querySelector('.app__settings').classList.toggle('hidden');
+}
 
 socket.emit('handshake', { sessionId: searchparams.get('sessionId') || 'new'});
 
@@ -26,7 +33,6 @@ function App() {
 
   useEffect(() => {
     socket.on('data', data => {
-      console.log(data);
       resHandler.handle(data);
     });
   }, []);
@@ -34,16 +40,26 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1>MobTimer</h1>
+        <h1 className="header__mob">MOB</h1><h1>TIMER</h1>
       </header>
       <div className="app__main">
+        <button className="settings__showhide" onClick={showHideSettings}>Hide Settings</button>
         <div className="app__settings">
           <Settings roundLength={(state.roundLength/60).toString()} sendData={sendData} />
           <NewUserForm addNewUser={name => sendData({type: 'new_user', name})} />
         </div>
         <div className="app__controls">
           <button onClick={() => sendData({ type: 'time', action: 'start' })}>Start timer</button>
-          <button onClick={() => console.dir(state)}>dump state</button>
+          <button enabled={(state.status !== 'stopped').toString()} onClick={e => {
+            if (state.status === 'running') {
+
+              sendData({ type: 'time', action: 'pause' })
+              e.target.textContent = 'Resume';
+            }
+            if (state.status === 'paused') {
+              sendData({ type: 'time', action: 'resume' })
+              e.target.textContent = 'Pause';
+            }}}>Pause</button>
         </div>
         <ul className="app__userList">
           {
@@ -51,6 +67,7 @@ function App() {
             : <p className="userList__nousers">Add users to begin!</p>
           }
         </ul>
+
       </div>
     </div>
   );
