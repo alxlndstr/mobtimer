@@ -40,7 +40,11 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1 className="header__mob">MOB</h1><h1>TIMER</h1>
+        <div><h1 className="header__mob">MOB</h1><h1>TIMER</h1></div>
+        <div className="header__share">
+          <p className="header__sharelinklabel">SHARE LINK:</p>
+          <p className="header__sharelink">{`${window.location.protocol}//${window.location.host}/?sessionId=${state.id}`}</p>
+        </div>
       </header>
       <div className="app__main">
         <button className="settings__showhide" onClick={showHideSettings}>Hide Settings</button>
@@ -67,7 +71,6 @@ function App() {
             : <p className="userList__nousers">Add users to begin!</p>
           }
         </ul>
-
       </div>
     </div>
   );

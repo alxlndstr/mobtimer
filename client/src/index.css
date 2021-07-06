@@ -48,17 +48,18 @@ input {
 }
 .app__header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 130px;
   background: linear-gradient(80deg,#32373bff,#32373b00);
   border-bottom: 2px solid #21262aff;
   margin-bottom: 12px;
   padding-left: 32px;
   padding-top: 6px;
+  justify-content: space-between;
   align-content: center;
-  letter-spacing: 8px;
 }
-.app__header h1 {
+.app__header h1 {  
+  letter-spacing: 8px;
   font-family: 'Zen Tokyo Zoo', cursive;
   margin: 0;
   font-size: 38px;
@@ -66,14 +67,33 @@ input {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.app__header .header__share {
+  font-size: 12px;
+  margin: 6px;
+  line-height: 16px;
+}
+.header__sharelink {
+  background-color: var(--my-green);
+  padding: 3px;
+  border: 1px solid var(--sunray);
+  border-radius: 5px;
+}
+.header__sharelink :hover {
+  background-color: white;
+}
 .app__header .header__mob {
   font-size: 56px;
 }
 .app__main {
   display: flex;
   flex-direction: column;
-  padding: 32px;
+  padding: 48px;
   align-content: center;
+  align-self: center;
+  width: fit-content;
+  border: 3px solid var(--onyx);
+  border-radius: 20px;
+  background-color:rgb(103, 117, 117);
 }
 .app__settings {
   align-self: center;

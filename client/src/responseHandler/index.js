@@ -49,6 +49,11 @@ const handleResponse = ({state, setState}, socket, data) => {
       setState({...state, users: data.users, currentTime: data.currentTime, currentUser: data.currentUser});
       break;
     }
+    case 'update_state': {
+      const { type, ...params } = data;
+      setState({ ...state, ...params });
+      break;
+    }
     default: return;
   }
 };

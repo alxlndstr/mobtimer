@@ -23,12 +23,13 @@ const newSession = () => {
     state.status = 'stopped';
     state.currentTime = state.roundLength;
   };
-  state.endTurn = () => {
+  state.endTurn = socket => {
     if (state.status === 'running') {
       state.resetClock();
     }
     nextIndex = state.nextUserIndex();
     state.currentUser = nextIndex > -1 ? state.users[nextIndex] : {};
+    if (state.continuous) state.startRound(socket);
   };
   state.clientState = () => {
     const {
@@ -51,7 +52,7 @@ const newSession = () => {
   }
   state.removeUser = (userId) => {
     const index = state.users.indexOf(state.users.find(({id}) => id === userId));
-    if(state.currentUser?.id === userId) state.endTurn()
+    if (state.currentUser?.id === userId) state.endTurn()
     state.users.splice(index, 1);
   }
   state.setRoundLength = (minutes, seconds = 0) => {
@@ -98,7 +99,7 @@ const newSession = () => {
         socket.emit('data', { type: 'time', currentTime: state.currentTime });
       }
       if (state.currentTime < 1000) {
-        state.endTurn();
+        state.endTurn(socket);
         socket.emit('data', { type: 'time_end', status: state.status, currentUser: state.currentUser, currentTime: state.currentTime });
       }
     }, 1000);
